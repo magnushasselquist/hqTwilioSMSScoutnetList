@@ -16,7 +16,7 @@ function sendSMS($sms_nr, $sms_body) {
 	// echo $sms_body." ";
 	$account_sid = 'XXX'; // SET YOUR OWN
 	$auth_token = 'XXX'; // SET YOUR OWN
-  $sender = 'XXX' // SET YOUR OWN
+  	$sender = 'XXX' // SET YOUR OWN
 	$client = new Client($account_sid, $auth_token); 	
 	
 	$smsresult = $client->messages->create(
