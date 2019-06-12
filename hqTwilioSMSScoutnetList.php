@@ -3,6 +3,17 @@
 require_once '../vendor/autoload.php'; 
 use Twilio\Rest\Client; 
 
+$account_sid = 'XXX'; // SET YOUR OWN FROM TWILIO
+$auth_token = 'XXX'; // SET YOUR OWN FROM TWILIO
+$sender = 'XXX' // SET YOUR OWN NUMBER FROM TWILIO (ie +46707123456)
+	
+$scoutnet_kar_id = 'XXX' // SET YOUR OWN
+$scoutnet_custom_lists_url = 'www.scoutnet.se/api/group/customlists' 
+$scoutnet_custom_lists_api_key = 'XXX' //SET YOUR OWN
+$scoutnet_member_list_url = 'www.scoutnet.se/api/group/memberlist' 	
+$scoutnet_member_list_api_key = 'XXX' //SET YOUR OWN
+	
+
 function fixNumber($nr) {
 	$nr = str_replace(" ", "", $nr); // ta bort mellanslag
 	$nr = preg_replace('/\s+/', '', $nr); // all spaces
@@ -12,12 +23,9 @@ function fixNumber($nr) {
 }
 
 function sendSMS($sms_nr, $sms_body) {
-	echo " - ".$sms_nr;
-	// echo $sms_body." ";
-	$account_sid = 'XXX'; // SET YOUR OWN
-	$auth_token = 'XXX'; // SET YOUR OWN
-  	$sender = 'XXX' // SET YOUR OWN
 	$client = new Client($account_sid, $auth_token); 	
+	echo " - ".$sms_nr;
+	// echo $sms_body." "; // DEBUG	
 	
 	$smsresult = $client->messages->create(
 		$sms_nr,
@@ -34,14 +42,14 @@ if (isset($_GET["listid"]) and isset($_GET["text"])) { // lista vald
 	$listid = $_GET["listid"];
 	$text = $_GET["text"];
 	echo "Getting List ".$listid.".. ";
-	$remotePageUrlLista = "https://KÅRID:API_KEY@www.scoutnet.se/api/group/customlists?list_id=".$listid;
+	$remotePageUrlLista = "https://".$scoutnet_kar_id.":".$$scoutnet_custom_lists_api_key."@".$scoutnet_custom_lists_url."?list_id=".$listid;
 	$remotePageLista = file_get_contents($remotePageUrlLista); //get the remote page
 	// echo $remotePageLista; //DEBUG CMJ
 	// $remotePageLista = json_decode($remotePageLista, true);
 	echo "Done.<br/>";
 	
 	echo "Getting ALL MEMBERS JSON data.. ";
-	$remotePageUrlAll = "https://KÅRID:API_KEY@www.scoutnet.se/api/group/memberlist";
+	$remotePageUrlAll = "https://".$scoutnet_kar_id.":".$scoutnet_member_list_api_key."@".$scoutnet_member_list_url."";
 	$remotePageAll = file_get_contents($remotePageUrlAll); //get the remote page
 	// echo $remotePageAll; //DEBUG CMJ
 	$remotePageAll = json_decode($remotePageAll, true);
@@ -81,7 +89,7 @@ if (isset($_GET["listid"]) and isset($_GET["text"])) { // lista vald
 	echo "Lista<br/>";
 	echo "<form action='#'><select name='listid'>";
     //echo "Getting All lists..<br/>";
-	$remotePageUrlListor = "KÅRID:API_KEY@www.scoutnet.se/api/group/customlists";
+	$remotePageUrlListor = "https://".$scoutnet_kar_id.":".$scoutnet_custom_lists_api_key."@".$scoutnet_custom_lists_url."";
 	$remotePageListor = file_get_contents($remotePageUrlListor); //get the remote page
 	// echo $remotePageListor; //DEBUG CMJ
 	$remotePageListor = json_decode($remotePageListor, true);
